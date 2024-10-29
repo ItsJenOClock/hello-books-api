@@ -17,7 +17,7 @@ def create_book():
     response = {
         "id": new_book.id,
         "title": new_book.title,
-        "description": new_book.description,
+        "description": new_book.description
     }
     return response, 201
 
@@ -30,6 +30,25 @@ def get_all_books():
         books_response.append({
             "id": book.id,
             "title": book.title,
-            "description": book.description,
+            "description": book.description
         })
     return books_response
+
+@books_bp.get("/<book_id>")
+def get_one_book(book_id):
+    book = validate_book(book_id)
+    return {"id": book.id, "title": book.title, "description": book.description}
+
+def validate_book(book_id):
+    try:
+        book_id = int(book_id)
+    except:
+        abort(make_response({"message": f"book {book_id} invalid"}, 400))
+    
+    query = db.select(Book).where(Book.id == book_id)
+    book = db.session.scalar(query)
+    
+    if not book:
+        abort(make_response({"message": f"book {book_id} not found"}, 404))
+    
+    return book
