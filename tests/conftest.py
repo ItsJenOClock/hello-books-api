@@ -2,9 +2,9 @@ import pytest
 from app import create_app
 from app.db import db
 from flask.signals import request_finished
+from app.models.book import Book
 from dotenv import load_dotenv
 import os
-from app.models.book import Book
 
 load_dotenv()
 
@@ -32,6 +32,7 @@ def app():
 def client(app):
     return app.test_client()
 
+
 @pytest.fixture
 def two_saved_books(app):
     # Arrange
@@ -41,7 +42,4 @@ def two_saved_books(app):
                          description="i luv 2 climb rocks")
 
     db.session.add_all([ocean_book, mountain_book])
-    # Alternatively, we could do
-    # db.session.add(ocean_book)
-    # db.session.add(mountain_book)
     db.session.commit()
