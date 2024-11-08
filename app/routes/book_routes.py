@@ -23,11 +23,9 @@ def get_one_book(book_id):
 def update_book(book_id):
     book = validate_model(Book, book_id)
     request_body = request.get_json()
-
     book.title = request_body["title"]
     book.description = request_body["description"]
     db.session.commit()
-
     return Response(status=204, mimetype="application/json") # 204 No Content
 
 @bp.delete("/<book_id>")
@@ -35,5 +33,4 @@ def delete_book(book_id):
     book = validate_model(Book, book_id)
     db.session.delete(book)
     db.session.commit()
-
     return Response(status=204, mimetype="application/json")
